@@ -26,4 +26,32 @@ class Course(models.Model):
         verbose_name_plural = verbose_name
 
 
+class Lesson(models.Model):
+    course = models.ForeignKey('Course',verbose_name='课程',on_delete=models.CASCADE)
+    name = models.CharField('章节名',max_length=100)
+    add_time =models.DateTimeField('添加时间',default=datetime.now)
 
+    class Meta:
+        verbose_name = '章节'
+        verbose_name_plural = verbose_name
+
+
+class Video(models.Model):
+    lesson = models.ForeignKey('Lesson',verbose_name='章节',on_delete=models.CASCADE)
+    name = models.CharField('视频名称', max_length=100)
+    add_time = models.DateTimeField('添加时间', default=datetime.now)
+
+    class Meta:
+        verbose_name = '视频'
+        verbose_name_plural = verbose_name
+
+
+class CourseResource(models.Model):
+    course = models.ForeignKey('Course',verbose_name='课程',on_delete=models.CASCADE)
+    name = models.CharField('名称', max_length=100)
+    download = models.FileField('资源文件',upload_to='course/resource/%Y/%m',max_length=100)
+    add_time = models.DateTimeField('添加时间', default=datetime.now)
+
+    class Meta:
+        verbose_name = '课程资源'
+        verbose_name_plural = verbose_name
