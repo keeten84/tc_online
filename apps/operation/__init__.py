@@ -1,0 +1,1 @@
+default_app_config = 'operation.apps.OperationConfig' #配置app的配置config

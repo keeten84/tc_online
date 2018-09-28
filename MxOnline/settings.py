@@ -17,6 +17,8 @@ import sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 搜索目录到配置：如果所有app都放在一个apps下的话，需要添加下列语句，将apps放到搜索路径中
 sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
+#为xadmin添加搜索路径
+sys.path.insert(0,os.path.join(BASE_DIR, 'extra_apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -31,6 +33,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+#重载检测用户名的方法
+AUTHENTICATION_BACKENDS = (
+    'Users.views.CustomBackend',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,6 +49,10 @@ INSTALLED_APPS = [
     'course',
     'operation',
     'organization',
+    'xadmin',            #以下两步去注册xadmin： 注册xadmin和 crispy-forms
+    'crispy_forms',
+    'captcha', #验证码的第三方库
+    'pure_pagination', #快速分页的第三方库
 ]
 
 # 当自定义userprofile（继承自django内部user表）覆盖默认user表的时候，需要添加以下代码去重载user表
@@ -72,6 +82,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 配置解析{{MEDIA_URL}}的方法, django 2.0之前版本配置为django.template.context_processors.media
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -116,19 +128,35 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans' #zh-hans en-us
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai' #Asia/Shanghai
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False #这里如果用本地时间，必须改为false，否则用UTC时间
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR,'static'),
+)
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# 配置发送email邮件服务器
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'projectemail84@163.com'
+EMAIL_HOST_PASSWORD = 'admin1234'
+EMAIL_FROM = 'projectemail84@163.com'
+
+# 配置资源文件的配置方法
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
