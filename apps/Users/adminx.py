@@ -3,8 +3,9 @@ _author__ = 'Keeten_Qiu'
 __date__ = '2018/9/13 下午2:48'
 
 import xadmin
-from .models import EmailVerifyRecord, Banner
 from xadmin import views
+from xadmin.layout import Fieldset, Main, Side, Row
+from .models import EmailVerifyRecord, Banner, UserProfile
 
 
 #注册管理页面的主题功能
@@ -31,15 +32,18 @@ class EmailVerifyRecordAdmin(object):
     search_fields = ['code','email','send_type']
     #在管理页面添加过滤器
     list_filter = ['code','email','send_type','send_time']
+    model_icon = 'fa fa-envelope-o'
 
 
 class BannerAdmin(object):
     list_display = ['title' ,'image' ,'url' ,'index','add_time']
     search_fields = ['title' ,'image' ,'url' ,'index']
     list_filter = ['title' ,'image' ,'url' ,'index','add_time']
-
+    # 设置管理页面的图标
+    model_icon = 'fa fa-file-image-o'
 
 xadmin.site.register(EmailVerifyRecord,EmailVerifyRecordAdmin)
 xadmin.site.register(Banner,BannerAdmin)
 xadmin.site.register(views.BaseAdminView,BaseSetting)   #注册管理页面的主题功能
 xadmin.site.register(views.CommAdminView,GlobalSettings)#注册管理页面显示功能设置
+

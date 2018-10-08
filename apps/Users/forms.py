@@ -1,4 +1,6 @@
 # _*_ coding: utf-8 _*_
+from Users.models import UserProfile
+
 __author__ = 'Keeten_Qiu'
 __date__ = '2018/9/14 下午11:45'
 from django import forms
@@ -33,3 +35,19 @@ class ForgetForm(forms.Form):
 class ModifyPwdForm(forms.Form):
     password1 = forms.CharField(required=True,min_length=6)
     password2 = forms.CharField(required=True,min_length=6)
+
+
+
+class UploadImageForm(forms.ModelForm):
+    class Meta:
+        # 指定继承哪个表
+        model = UserProfile
+        fields = ['image']
+
+
+class UserInfoForm(forms.ModelForm):
+    '''个人中心修改个人资料验证用的Form'''
+    class Meta:
+        # 指定继承哪个表
+        model = UserProfile
+        fields = ['nickname','birthday','gender','address','mobile']

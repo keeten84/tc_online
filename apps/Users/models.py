@@ -21,12 +21,18 @@ class UserProfile(AbstractUser):
     def __unicode__(self):
         return self.username
 
+    def get_unread_nums(self):
+        # 获取用户未读消息的数量
+        from operation.models import UserMessage
+        # import放在方法里面表示调用方法的时候才去import
+        # 查找该用户的未读信息,并返回数量
+        return UserMessage.objects.filter(user=self.id,has_read=False).count()
 
 class EmailVerifyRecord(models.Model):
     '''验证码'''
     code = models.CharField('验证码',max_length=20)
     email =models.EmailField('邮箱',max_length=50)
-    send_type = models.CharField('验证码的类型',choices=(('register','注册'),('forget','找回密码')),max_length=10)
+    send_type = models.CharField('验证码的类型',choices=(('register','注册'),('forget','找回密码'),('update_email','修改邮箱')),max_length=20)
     send_time = models.DateTimeField('发送时间',default=datetime.now)
 
     def __str__(self):

@@ -6,37 +6,69 @@
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    {% block title %}
-        <title>机构首页</title>
-    {% endblock %}
+
+    <title>{% block title %}{% endblock %}</title>
 
     <link rel="stylesheet" type="text/css" href="{% static '/css/reset.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}/">
     <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '/js/plugins/queryCity/css/cityLayout.css' %}">
-    {% block cutom_css %}
-    {% endblock %}
+    {% block cutom_css %}{% endblock %}
 
     <script src="{% static '/js/jquery.min.js' %}" type="text/javascript"></script>
     <script src="{% static '/js/jquery-migrate-1.2.1.min.js' %}" type="text/javascript"></script>
-    {% block cutom_js %}
-    {% endblock %}
+    {% block cutom_js %}{% endblock %}
 
 </head>
 <body>
 <section class="headerwrap headerwrap2">
     <header>
         <div class="header2 header">
-
             <div class="top">
                 <div class="wp">
                     <div class="fl">
-                        <p>联系方式：<b>3333333333</b></p>
+                        <p>服务电话：<b>33333333</b></p>
                     </div>
-                    <a style="color:white" class="fr registerbtn" href="register.html">注册</a>
-                    <a style="color:white" class="fr loginbtn" href="login.html">登录</a>
-                </div>
-            </div>
+                    {% if request.user.is_authenticated %}
+                        <div class="personal">
+                            <dl class="user fr">
+                                <dd>{{ request.user }}<img class="down fr" src="/static/images/top_down.png"/></dd>
+                                <dt><img width="20" height="20"
+                                         src="{{ MEDIA_URL }}{{ request.user.image }}"/></dt>
+                            </dl>
+
+                            <div class="userdetail">
+                                <dl>
+                                    <dt>
+                                        <img width="80" height="80" src="{{ MEDIA_URL }}{{ request.user.image }}"/>
+                                    </dt>
+                                    <dd>
+                                        <h2>{{ request.user.nickname }}</h2>
+                                        <p>{{ request.user.username }}</p>
+                                    </dd>
+                                </dl>
+                                <div class="btn">
+                                    <a class="personcenter fl" href="{% url 'users:user_info' %}">进入个人中心</a>
+                                    <a class="fr" href="{% url 'logout' %}">退出</a>
+                                </div>
+                            </div>
+                            <a href="{% url 'users:mymessage' %}">
+                                <div class="msg-num"><span id="MsgNum">{{ request.user.get_unread_nums }}</span></div>
+                            </a>
+                        </div>
+                        </div>
+                        </div>
+                    {% else %}
+                        <div class="top">
+                            <div class="wp">
+                                <div class="fl">
+                                    <p>服务电话：<b>33333333</b></p>
+                                </div>
+                                <a style="color:white" class="fr registerbtn" href="{% url 'register' %}">注册</a>
+                                <a style="color:white" class="fr loginbtn" href="{% url 'login' %}">登录</a>
+                            </div>
+                        </div>
+                    {% endif %}
 
 
             <div class="middle companyheader">
@@ -54,9 +86,9 @@
                             <span class="key">5.0</span>
                         </p>
                     </div>
-                    <div class="btn fr collectionbtn  notlogin
-                 " data-favid="22" data-fav-type="1">
-                        收藏
+
+                    <div class="btn fr collectionbtn  notlogin" data-favid="22" data-fav-type="1">
+                        {% if has_fav %}已收藏{% else %}收藏{% endif %}
                     </div>
 
                 </div>
@@ -68,8 +100,8 @@
 <section>
     <div class="wp">
         <ul class="crumbs">
-            <li><a href="index.html">首页</a>></li>
-            <li><a href="org-list.html">课程机构</a>></li>
+            <li><a href="{% url 'index' %}">首页</a>></li>
+            <li><a href="{% url 'org:org_list' %}">课程机构</a>></li>
             <li>{% block page_path %}机构首页{% endblock %}</li>
         </ul>
     </div>
@@ -79,10 +111,14 @@
     <div class="wp list personal_list comp">
         <div class="left">
             <ul>
-                <li class="active2"><a href="org-detail-homepage.html">机构首页</a></li>
-                <li class=""><a href="org-detail-course.html">机构课程</a></li>
-                <li class=""><a href="org-detail-desc.html">机构介绍</a></li>
-                <li class=""><a href="org-detail-teachers.html">机构讲师</a></li>
+                <li class="{% ifequal current_page 'home' %}active2{% endifequal %}"><a
+                        href="{% url 'org:org_home' course_org.id %}">机构首页</a></li>
+                <li class="{% ifequal current_page 'course' %}active2{% endifequal %}"><a
+                        href="{% url 'org:org_course' course_org.id %}">机构课程</a></li>
+                <li class="{% ifequal current_page 'desc' %}active2{% endifequal %}"><a
+                        href="{% url 'org:org_desc' course_org.id %}">机构介绍</a></li>
+                <li class="{% ifequal current_page 'teacher' %}active2{% endifequal %}"><a
+                        href="{% url 'org:org_teacher' course_org.id %}">机构讲师</a></li>
             </ul>
         </div>
 
@@ -226,11 +262,13 @@
 </div>
 <!--弹出省省市-->
 <script src="{% static '/js/selectUi.js' %}" type='text/javascript'></script>
-<script type="text/javascript" src="{% static '/js/plugins/laydate/laydate.js' %}"></script>
+<script src="{% static '/js/deco-common.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/plugins/laydate/laydate.js' %}" type="text/javascript"></script>
 <script src="{% static '/js/plugins/layer/layer.js' %}"></script>
 <script src="{% static '/js/plugins/queryCity/js/public.js' %}" type="text/javascript"></script>
-
-<script type="text/javascript" src="{% static '/js/plugins/jquery.raty.js' %}"></script>
+<script src="{% static '/js/unslider.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/plugins/jquery.raty.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/plugins/jquery.scrollLoading.js' %}" type="text/javascript"></script>
 <script type="text/javascript">
     //收藏分享
     //收藏分享
@@ -238,16 +276,18 @@
         $.ajax({
             cache: false,
             type: "POST",
-            url: "/org/add_fav/",
+            url: "{% url 'org:add_fav' %}",
             data: {'fav_id': fav_id, 'fav_type': fav_type},
             async: true,
             beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", "5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy");
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
             },
             success: function (data) {
+                console.log(data)
+                console.log(current_elem)
                 if (data.status == 'fail') {
                     if (data.msg == '用户未登录') {
-                        window.location.href = "login.html";
+                        window.location.href = "{% url 'login' %}";
                     } else {
                         alert(data.msg)
                     }
@@ -260,7 +300,7 @@
     }
 
     $('.collectionbtn').on('click', function () {
-        add_fav($(this), 1, 2);
+        add_fav($(this), {{ course_org.id }}, 2);
     });
 
     $(function () {
@@ -268,7 +308,7 @@
             score = $precision.attr('data-star-scope'),
             option = {
                 half: true,
-                path: '{% static '/images/' %}',
+                path: '{% url 'org:add_fav' %}',
                 precision: true,
                 size: 24,
                 starOff: 'g_star.png',

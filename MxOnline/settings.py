@@ -29,7 +29,7 @@ SECRET_KEY = 'i+j&(wf935kqot8#-pk&gul&kt@c#wpz7yhc4^=8@_o9+ywg+p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -144,7 +144,7 @@ USE_TZ = False #这里如果用本地时间，必须改为false，否则用UTC�
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR,'static'),
+    os.path.join(BASE_DIR,'/static/'),
 )
 
 
@@ -159,4 +159,6 @@ EMAIL_FROM = 'projectemail84@163.com'
 # 配置资源文件的配置方法
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+# STATIC_ROOT = os.path.join(BASE_DIR,'static')
 

@@ -18,6 +18,7 @@ from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.sites import site
 from xadmin.util import unquote
 from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -263,7 +264,7 @@ class ChangeAccountPasswordView(ChangePasswordView):
 
 
 user_model = settings.AUTH_USER_MODEL.lower().replace('.','/')
-site.register_view(r'^%s/(.+)/password/$' % user_model,
+site.register_view(r'^Users/userprofile/(.+)/password/$',
                    ChangePasswordView, name='user_change_password')
 site.register_view(r'^account/password/$', ChangeAccountPasswordView,
                    name='account_password')
