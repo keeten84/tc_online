@@ -42,6 +42,9 @@ urlpatterns = [
     url(r'^users/', include('Users.urls',namespace='users')),
     # 在生产环境下自己配置media访问函数
     # url(r'^static/(?P<path>.*)$', serve, {'document_root':STATIC_ROOT}),
+
+    # 富文本相关url
+    url(r'^ueditor/',include('DjangoUeditor.urls' )),
 ]
 
 # 全局404,500等页面配置方法(固定写法)，必须在项目的urls中设置

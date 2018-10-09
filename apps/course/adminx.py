@@ -46,12 +46,22 @@ class CourseAdmin(object):
     list_editable = ['degree','desc']
     # 设置自动刷新时间
     refresh_times = [3, 5]
+    # 注册ueditor到页面
+    style_fields = {'detail': 'ueditor'}
+    # 导入excel插件
+    import_excel = True
 
     # 设置2个页面管理同一张表的方法，第三步，将父类的数据去出子类的数据，避免重复显示
     def queryset(self):
         qs = super(CourseAdmin, self).queryset()
         qs = qs.filter(is_banner = False)
         return qs
+
+
+    def post(self, request, *args, **kwargs):
+        if 'excel' in request.FILES:
+            pass
+        return super(CourseAdmin,self).post(request, *args, **kwargs)
 
 
 # 设置2个页面管理同一张表的方法，第二步，复制父类的Admin类容，并重构queryset方法
@@ -64,6 +74,8 @@ class BannerCourseAdmin(object):
     readonly_fields = ['click_nums']
     exclude = ['fav_nums']
     inlines = [LessonInLine, CourseResourceInLine]
+    style_fields = {'detail': 'ueditor'}
+
 
     # 通过重新构造queryset方法，重新过滤需要显示的数据,过滤的数据可以根据要求自己写
     def queryset(self):

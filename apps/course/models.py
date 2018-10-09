@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from datetime import datetime
 from organization.models import CourseOrg, Teacher
+from DjangoUeditor.models import UEditorField
 
 
 # Create your models here.
@@ -13,7 +14,9 @@ class Course(models.Model):
     course_org = models.ForeignKey(CourseOrg,verbose_name='课程机构',null=True,blank=True,on_delete=models.CASCADE)
     name = models.CharField('课程名', max_length=50)
     desc = models.CharField('课程描述', max_length=300)
-    detail = models.TextField('课程详情')
+    # detail = models.TextField('课程详情') 这个是原来的字段，将改为下面的使用富文本作为字段
+    detail = UEditorField('课程详情',width=900, height=400, toolbars="full", imagePath="courses/ueditor/",
+                                 filePath="courses/ueditor/", default='')
     is_banner = models.BooleanField('是否轮播',default=False)
     teacher = models.ForeignKey(Teacher,verbose_name='讲师',null=True,blank=True,on_delete=models.CASCADE)
     degree = models.CharField('课程难度', choices=(('cj', '初级'), ('zj', '中级'), ('gj', '高级')), max_length=2)

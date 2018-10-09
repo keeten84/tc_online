@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'captcha', #验证码的第三方库
     'pure_pagination', #快速分页的第三方库
+    'DjangoUeditor',
 ]
 
 # 当自定义userprofile（继承自django内部user表）覆盖默认user表的时候，需要添加以下代码去重载user表
